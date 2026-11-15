@@ -1,0 +1,20 @@
+.DS_Store
+
+# dependencies
+node_modules
+
+# build output
+.next
+dist
+out
+coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# vercel
+.vercel
+
+# env files (keep .env.example tracked)
+.env
+.env*.local
+!.env.example
