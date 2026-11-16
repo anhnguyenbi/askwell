@@ -10,7 +10,7 @@ An AI support chat widget for any website. The product name lives in `APP_NAME` 
 ## Setup
 
 1. `pnpm install`
-2. `cp .env.example .env.local`, then fill in the values you need. Never commit `.env*` files other than `.env.example`.
+2. `cp .env.example apps/web/.env.local` (Next.js reads env files from `apps/web`), then fill in the values you need. Never commit `.env*` files other than `.env.example`.
 3. `pnpm dev`, then open http://localhost:3000
 
 ## Commands
