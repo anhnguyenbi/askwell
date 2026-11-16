@@ -64,4 +64,8 @@ describe("config.matcher", () => {
   it("always runs on API routes", () => {
     expect(config.matcher).toContain("/(api|trpc)(.*)");
   });
+
+  it("always runs on Clerk proxy routes", () => {
+    expect(config.matcher).toContain("/__clerk/(.*)");
+  });
 });
