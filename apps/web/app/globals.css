@@ -1,1 +1,182 @@
 @import "tailwindcss";
+
+/*
+ * Design tokens (project.md §13).
+ *
+ * One token set, two themes. The raw values live in CSS variables below; the
+ * `@theme inline` block maps them to Tailwind utilities (bg-background,
+ * text-muted, border-glass-border, shadow-glass, backdrop-blur-glass, ...).
+ *
+ * Themes:
+ *   - light (default, dashboard): no class needed, or `.theme-light`
+ *   - dark (landing):             wrap the page in `.theme-dark`
+ *   The `dark:` variant follows the `.theme-dark` wrapper, not the OS setting.
+ */
+
+@custom-variant dark (&:where(.theme-dark, .theme-dark *));
+
+/* ---------- Light theme (default) ---------- */
+:root,
+.theme-light {
+  color-scheme: light;
+
+  /* Monochrome scale */
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0 0);
+  --muted: oklch(0.45 0 0);
+  --subtle: oklch(0.955 0 0);
+  --border: oklch(0.145 0 0 / 0.1);
+  --ring: oklch(0.145 0 0 / 0.4);
+
+  /* Primary action: solid ink on paper */
+  --primary: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-hover: oklch(0.3 0 0);
+
+  /* Secondary / ghost surfaces */
+  --secondary: oklch(0.145 0 0 / 0.06);
+  --secondary-hover: oklch(0.145 0 0 / 0.1);
+
+  /* Glass */
+  --glass: oklch(1 0 0 / 0.6);
+  --glass-strong: oklch(1 0 0 / 0.82);
+  --glass-border: oklch(0.145 0 0 / 0.08);
+  --glass-highlight: oklch(1 0 0 / 0.7);
+
+  /* Status (kept low-chroma so the UI stays monochrome) */
+  --danger: oklch(0.5 0.17 25);
+  --danger-soft: oklch(0.5 0.17 25 / 0.08);
+
+  /* Elevation */
+  --shadow-sm-value: 0 1px 2px oklch(0 0 0 / 0.05);
+  --shadow-glass-value: 0 1px 1px oklch(0 0 0 / 0.03), 0 8px 24px -8px oklch(0 0 0 / 0.12);
+  --shadow-glass-lg-value: 0 2px 4px oklch(0 0 0 / 0.04), 0 24px 48px -12px oklch(0 0 0 / 0.18);
+}
+
+/* ---------- Dark theme (landing) ---------- */
+.theme-dark {
+  color-scheme: dark;
+
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(0.97 0 0);
+  --muted: oklch(0.7 0 0);
+  --subtle: oklch(0.16 0 0);
+  --border: oklch(1 0 0 / 0.1);
+  --ring: oklch(1 0 0 / 0.45);
+
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.08 0 0);
+  --primary-hover: oklch(0.85 0 0);
+
+  --secondary: oklch(1 0 0 / 0.08);
+  --secondary-hover: oklch(1 0 0 / 0.14);
+
+  --glass: oklch(1 0 0 / 0.05);
+  --glass-strong: oklch(1 0 0 / 0.1);
+  --glass-border: oklch(1 0 0 / 0.12);
+  --glass-highlight: oklch(1 0 0 / 0.08);
+
+  --danger: oklch(0.7 0.15 25);
+  --danger-soft: oklch(0.7 0.15 25 / 0.12);
+
+  --shadow-sm-value: 0 1px 2px oklch(0 0 0 / 0.4);
+  --shadow-glass-value: 0 1px 1px oklch(0 0 0 / 0.3), 0 8px 32px -8px oklch(0 0 0 / 0.6);
+  --shadow-glass-lg-value: 0 2px 4px oklch(0 0 0 / 0.3), 0 24px 64px -12px oklch(0 0 0 / 0.7);
+}
+
+/* ---------- Motion ---------- */
+:root {
+  --motion-duration-fast: 120ms;
+  --motion-duration: 200ms;
+  --motion-duration-slow: 400ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-fast: 0ms;
+    --motion-duration: 0ms;
+    --motion-duration-slow: 0ms;
+  }
+}
+
+/* ---------- Tailwind mapping ---------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-glass-border: var(--glass-border);
+  --color-glass-highlight: var(--glass-highlight);
+
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --shadow-sm: var(--shadow-sm-value);
+  --shadow-glass: var(--shadow-glass-value);
+  --shadow-glass-lg: var(--shadow-glass-lg-value);
+
+  --ease-standard: var(--motion-ease);
+}
+
+@theme {
+  --radius-control: 0.625rem;
+  --radius-panel: 1.25rem;
+  --radius-pill: 9999px;
+
+  --blur-glass: 16px;
+  --blur-glass-strong: 28px;
+}
+
+/* ---------- Shared utilities ---------- */
+
+/* Translucent, blurred panel surface. */
+@utility glass {
+  background-color: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-glass-value);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+}
+
+@utility glass-strong {
+  background-color: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-glass-lg-value);
+  -webkit-backdrop-filter: blur(var(--blur-glass-strong)) saturate(1.4);
+  backdrop-filter: blur(var(--blur-glass-strong)) saturate(1.4);
+}
+
+/* Shared transition. Collapses to 0ms under prefers-reduced-motion. */
+@utility transition-base {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: var(--motion-duration);
+  transition-timing-function: var(--motion-ease);
+}
+
+@utility transition-fast {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: var(--motion-duration-fast);
+  transition-timing-function: var(--motion-ease);
+}
+
+/* Theme wrappers paint their own background and text. */
+@layer base {
+  body,
+  .theme-light,
+  .theme-dark {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
